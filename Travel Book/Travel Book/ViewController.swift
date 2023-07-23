@@ -8,6 +8,7 @@
 import UIKit
 import MapKit
 import CoreLocation
+import CoreData
 
 class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 
@@ -15,6 +16,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     @IBOutlet weak var nameText: UITextField!
     @IBOutlet weak var mapView: MKMapView!
     var locationManager = CLLocationManager()
+    
+    var chosenLatitude = Double()
+    var chosenLongitude = Double()
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -36,6 +40,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             let touchedPoint = gestureRecognizer.location(in: self.mapView)
             let touchCoords = self.mapView.convert(touchedPoint, toCoordinateFrom: self.mapView)
             print(touchCoords)
+            chosenLatitude = touchCoords.latitude
+            chosenLongitude = touchCoords.longitude
+            
             let annotation = MKPointAnnotation()
             
             annotation.coordinate = touchCoords
@@ -55,6 +62,25 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 
     @IBAction func saveButtonClicked(_ sender: Any) {
         print("deneme")
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        
+        let newPlace = NSEntityDescription.insertNewObject(forEntityName: "Places", into: context)
+        
+        newPlace.setValue(UUID(), forKey: "id")
+        newPlace.setValue(nameText.text, forKey: "title")
+        newPlace.setValue(commentText.text, forKey: "subTitle")
+        newPlace.setValue(chosenLatitude, forKey: "latitude")
+        newPlace.setValue(chosenLongitude, forKey: "longitude")
+        
+        do{
+            try context.save()
+            print("save")
+        }catch{
+            print("error")
+        }
+        
+        
     }
     
 }
