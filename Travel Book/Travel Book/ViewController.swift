@@ -11,6 +11,8 @@ import CoreLocation
 
 class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 
+    @IBOutlet weak var commentText: UITextField!
+    @IBOutlet weak var nameText: UITextField!
     @IBOutlet weak var mapView: MKMapView!
     var locationManager = CLLocationManager()
     override func viewDidLoad() {
@@ -35,9 +37,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             let touchCoords = self.mapView.convert(touchedPoint, toCoordinateFrom: self.mapView)
             print(touchCoords)
             let annotation = MKPointAnnotation()
+            
             annotation.coordinate = touchCoords
-            annotation.title = "Test Annotaiton"
-            annotaion.subtitle = "test subtitle"
+            annotation.title = nameText.text
+            annotation .subtitle = commentText.text
             self.mapView.addAnnotation(annotation)
         }
     }
@@ -50,6 +53,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         mapView.setRegion(region, animated: true)
     }
 
-
+    @IBAction func saveButtonClicked(_ sender: Any) {
+        print("deneme")
+    }
+    
 }
 
