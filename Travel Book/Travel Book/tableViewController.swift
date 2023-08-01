@@ -35,7 +35,11 @@ class tableViewController: UIViewController, UITableViewDataSource, UITableViewD
         performSegue(withIdentifier: "toViewController", sender: self)
     }
     
-    func getData() {
+    override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(getData), name: NSNotification.Name("newPlace"), object: nil)
+    }
+    
+    @objc func getData() {
         let appDelagate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelagate.persistentContainer.viewContext
         
